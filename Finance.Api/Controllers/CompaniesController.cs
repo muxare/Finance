@@ -22,7 +22,6 @@ namespace Finance.Api.Controllers
         [HttpGet(Name = "GetCompanies")]
         public async Task<IEnumerable<CompanyEntity>> GetCompaniesAsync()
         {
-            //var tableServiceClient = new TableServiceClient(connectionString);
             var tableClient = new TableClient(connectionString, tablename);
             await tableClient.CreateIfNotExistsAsync();
             Pageable<CompanyEntity> result = tableClient.Query<CompanyEntity>();
