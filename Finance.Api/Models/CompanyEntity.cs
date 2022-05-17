@@ -13,5 +13,7 @@ namespace Finance.Api.Models
         public string RowKey { get; set; }
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
+
+        public static string CompanyPartitionKey = "d308f72a-cc29-47d0-812e-178351c30bc4";
     }
 }
