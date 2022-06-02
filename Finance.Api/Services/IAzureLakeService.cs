@@ -5,5 +5,6 @@ namespace Finance.Api.Services
     public interface IAzureLakeService
     {
         Task SaveQuotes(string quotes, CompanyEntity companyEntity);
+        Task<ICollection<string>> GetEodFilesAsync();
     }
 }

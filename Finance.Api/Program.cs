@@ -1,6 +1,11 @@
+using Finance.Api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddTransient<IAzureLakeService, AzureLakeService>();
+builder.Services.AddTransient<IAzureTableService, AzureTableService>();
+builder.Services.AddTransient<IQuoteImportService, QuoteImportService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

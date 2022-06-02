@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Azure.Data.Tables" Version="12.5.0" />
     <PackageReference Include="Azure.Storage.Files.DataLake" Version="12.10.0" />
+    <PackageReference Include="Csv" Version="2.0.84" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
   </ItemGroup>
 
