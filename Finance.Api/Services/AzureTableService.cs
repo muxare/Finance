@@ -6,31 +6,20 @@ namespace Finance.Api.Services
 {
     public class AzureTableService : IAzureTableService
     {
-        private string connectionString = "DefaultEndpointsProtocol=https;AccountName=financequotestorage;AccountKey=zF9IfHEw6C1FVGcoC07HngYDvvgsBuHc+Ww1U2fqTIdAIZUyqUIJs3ef4ZR8+Z5/kzHi95igdy1Pm+uuIOp12w==;EndpointSuffix=core.windows.net";
-        private string tablename = "Companies";
-
-        public AzureTableService()
-        {
-        }
+        private const string ConnectionString = "DefaultEndpointsProtocol=https;AccountName=financequotestorage;AccountKey=zF9IfHEw6C1FVGcoC07HngYDvvgsBuHc+Ww1U2fqTIdAIZUyqUIJs3ef4ZR8+Z5/kzHi95igdy1Pm+uuIOp12w==;EndpointSuffix=core.windows.net";
+        private const string TableName = "Companies";
 
         public async Task AddCompanyAsync(string name, string ticker, string url)
         {
-            var companyEntity = new CompanyEntity
-            {
-                Name = name,
-                Ticker = ticker,
-                Url = url,
-                PartitionKey = CompanyEntity.CompanyPartitionKey,
-                RowKey = Guid.NewGuid().ToString()
-            };
+            var companyEntity = new CompanyEntity(name, ticker, url);
 
-            var client = new TableClient(connectionString, tablename);
-            await client.AddEntityAsync<CompanyEntity>(companyEntity);
+            var client = new TableClient(ConnectionString, TableName);
+            await client.AddEntityAsync(companyEntity);
         }
 
         public async Task<IEnumerable<CompanyEntity>> GetCompaniesAsync()
         {
-            var tableClient = new TableClient(connectionString, tablename);
+            var tableClient = new TableClient(ConnectionString, TableName);
             await tableClient.CreateIfNotExistsAsync();
             Pageable<CompanyEntity> result = tableClient.Query<CompanyEntity>();
 

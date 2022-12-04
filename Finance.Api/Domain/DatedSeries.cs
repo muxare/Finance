@@ -21,6 +21,11 @@ namespace Finance.Api.Domain
             Series = series ?? throw new ArgumentNullException(nameof(series));
         }
 
+        public static DatedSeries<T> FromDictionary(IDictionary<DateTime, T> series)
+        {
+            return new DatedSeries<T>(series);
+        }
+
         public void Add(DateTime key, T value)
         {
             Series.Add(key, value);
