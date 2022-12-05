@@ -1,4 +1,6 @@
-﻿namespace Finance.Api.Domain
+﻿using Finance.Api.Domain.ValueObjects;
+
+namespace Finance.Api.Domain
 {
     public static class EmaFanSeriesExtentions
     {

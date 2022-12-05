@@ -1,4 +1,4 @@
-﻿namespace Finance.Api.Domain
+﻿namespace Finance.Api.Domain.ValueObjects
 {
     public class EmaFanEntry : ValueObject
     {
@@ -16,5 +16,25 @@
             yield return Value100;
             yield return Value200;
         }
+    }
+
+    public class TrendEntry : ValueObject
+    {
+        public DateTime DateTime { get; set; }
+
+        public TrendType TrendType { get; set; }
+
+        protected override IEnumerable<object> GetEqualityComponents()
+        {
+            yield return DateTime;
+            yield return TrendType;
+        }
+    }
+
+    public enum TrendType
+    {
+        Upp,
+        Between,
+        Down
     }
 }

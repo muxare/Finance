@@ -71,6 +71,23 @@ namespace Finance.Api.Services
             return result;
         }
 
+        public async Task<ICollection<string>> GetEmaFanFilesAsync()
+        {
+            var client = GetDataLakeServiceClient(AccountName, AccountKey);
+            var fsClient = client.GetFileSystemClient("raw");
+            var dirClient = fsClient.GetDirectoryClient(".");
+
+            var t = fsClient.GetPathsAsync("ema");
+            var result = new List<string>();
+            await foreach (var secretProperties in t)
+            {
+                var r = await DownloadFile(dirClient, secretProperties.Name);
+                result.Add(r);
+            }
+
+            return result;
+        }
+
         private async Task<string> DownloadFile(DataLakeDirectoryClient dirClient, string fileName)
         {
             var fileClient = dirClient.GetFileClient(fileName);

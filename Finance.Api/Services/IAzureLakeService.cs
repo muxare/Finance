@@ -11,5 +11,7 @@ namespace Finance.Api.Services
         Task SaveJsonEma(string jsonString, CompanyEntity companyEntity);
 
         Task<ICollection<string>> GetEodFilesAsync();
+
+        Task<ICollection<string>> GetEmaFanFilesAsync();
     }
 }

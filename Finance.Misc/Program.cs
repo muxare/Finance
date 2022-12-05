@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using Dto;
 using Finance.Api.Domain;
+using Finance.Api.Domain.ValueObjects;
 using Finance.Api.Models;
 using System.Globalization;
 
@@ -35,16 +36,6 @@ DatedSeries<double> EmaInvestiopedia(DatedSeries<double> list, int days)
     return ema;
 }
 
-
-/*
-Domain.DatedSeriesNew<PriceAction> PriceActionSeries()
-{
-
-}
-*/
-
-
-
 var seriesAsc = series.OrderBy(q => q.Key);
 var seriesDesc = series.OrderByDescending(q => q.Key);
 
@@ -64,16 +55,15 @@ EmaFanSeries list = closeSeries.Select(q => new EmaFanEntry
 }).ToEmaFanSeries();
 
 State state = new State();
-//state = Reducers.Reducer(state, null); 
-
+//state = Reducers.Reducer(state, null);
 
 var resUpTrend = BackTestUpTrend(seriesAsc.ToDictionary(o => o.Key, o => o), ema18, ema50, ema100, ema200);
 
 DatedSeries<bool> BackTestUpTrend(Dictionary<DateTime, KeyValuePair<DateTime, QuoteDtoYahoo>> dictionary, DatedSeries<double> ema18, DatedSeries<double> ema50, DatedSeries<double> ema100, DatedSeries<double> ema200)
-{ 
+{
     var res = new Dictionary<DateTime, bool>();
 
-    // Determine the earliest date to back test from 
+    // Determine the earliest date to back test from
     var dateStart = dictionary.First().Key;
 
     // Loop through data and find interesting dates
@@ -81,18 +71,17 @@ DatedSeries<bool> BackTestUpTrend(Dictionary<DateTime, KeyValuePair<DateTime, Qu
     bool upTrendPrev = false;
     foreach (DateTime date in dictionary.Keys)
     {
-        upTrend = ema18[date] > ema50[date] && ema50[date] > ema100[date] && ema100[date] > ema200[date]; 
+        upTrend = ema18[date] > ema50[date] && ema50[date] > ema100[date] && ema100[date] > ema200[date];
         if (upTrendPrev != upTrend)
         {
             res.Add(date, upTrend);
 
             upTrendPrev = upTrend;
-        } 
+        }
     }
 
     return new DatedSeries<bool>(res);
 }
-
 
 var resUpBounce = BackTestBounce(seriesAsc.ToDictionary(o => o.Key, o => o), ema18, ema50, ema100, ema200);
 DatedSeries<bounceState> BackTestBounce(Dictionary<DateTime, KeyValuePair<DateTime, QuoteDtoYahoo>> dictionary, DatedSeries<double> ema18, DatedSeries<double> ema50, DatedSeries<double> ema100, DatedSeries<double> ema200)
@@ -101,16 +90,16 @@ DatedSeries<bounceState> BackTestBounce(Dictionary<DateTime, KeyValuePair<DateTi
     var res = new Dictionary<DateTime, bool>();
     var states = new Dictionary<DateTime, bounceState>();
 
-    // Determine the earliest date to back test from 
+    // Determine the earliest date to back test from
     var dateStart = dictionary.First().Key;
 
     // Loop through data and find interesting dates
     bool upTrend;
     bool upTrendPrev = false;
-    
+
     foreach (DateTime date in dictionary.Keys)
     {
-        upTrend = ema18[date] > ema50[date] && ema50[date] > ema100[date] && ema100[date] > ema200[date]; 
+        upTrend = ema18[date] > ema50[date] && ema50[date] > ema100[date] && ema100[date] > ema200[date];
         if (!upTrend && states.Last().Value != bounceState.None)
         {
             state = bounceState.None;
@@ -126,16 +115,18 @@ DatedSeries<bounceState> BackTestBounce(Dictionary<DateTime, KeyValuePair<DateTi
             res.Add(date, upTrend);
 
             upTrendPrev = upTrend;
-        } else if (
-            states.Last().Value == bounceState.UpTrend && 
-            state != bounceState.Reaction && 
+        }
+        else if (
+            states.Last().Value == bounceState.UpTrend &&
+            state != bounceState.Reaction &&
             dictionary[date].Value.Close < ema18[date])
         {
             state = bounceState.Reaction;
             states.Add(date, state);
-        } else if (
-            states.Last().Value == bounceState.Reaction && 
-            state != bounceState.Buy && 
+        }
+        else if (
+            states.Last().Value == bounceState.Reaction &&
+            state != bounceState.Buy &&
             dictionary[date].Value.Close > ema18[date] && upTrend)
         {
             state = bounceState.Buy;
@@ -152,22 +143,14 @@ DatedSeries<bounceState> BackTestBounce(Dictionary<DateTime, KeyValuePair<DateTi
             // Place buy
 
             // Update Account
-
-        } 
+        }
     }
 
     return new DatedSeries<bounceState>(states);
 }
 
-
 Console.ReadKey();
-
-
-
 
 namespace Dto
 {
-    
 }
-
-
