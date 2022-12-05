@@ -75,79 +75,12 @@ namespace Finance.Api.Controllers
                 if (c != null)
                 {
                     var contentString = Encoding.Default.GetString(qs.Content.Value.Content);
-                    return new CompanyContents<Series<EndOfDay>>(c, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString));
+                    return new CompanyContents<Series<EndOfDay>>(c, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString), null);
                 }
                 return new CompanyContents<Series<EndOfDay>>();
             });
 
-            /*var r = cs.Zip(downloadDatas, async (c, t) =>
-            {
-                var t2 = await t;
-                return new CompanyContents(c.RowKey, c.Name, t2.Name, t2.Content);
-            }).ToArray();*/
-
             var mu = 0;
-
-            #region reference
-
-            /*
-            var tasks = blobContainerClientSource.GetBlobs()
-                .Where(b => b.Name.EndsWith("eod.csv"))
-                .Select(async item => {
-                    var downloadResult = await blobContainerClientSource.GetBlobClient(item.Name).DownloadContentAsync();
-                    return new { Name= item.Name, Content = downloadResult.Value.Content };
-                });
-            */
-            // Fetch CompanyEntity by the file name from blobs
-            //var cs =  await TableService.GetCompaniesAsync();
-            //cs.Where(o => o.)
-
-            /*
-            var resDatedSeriesLinq = Task.WhenAll(tasks).Result.Select(q => new { Name= q.Name, Content = Encoding.Default.GetString(q.Content) } )
-                .Select(o => new { Name = o.Name, Content = ParseQuoteString(o.Content)})
-                .Select(o => new { Name = o.Name, Content = DatedSeries<QuoteDtoYahoo>.FromDictionary(o.Content)});
-            */
-
-            /*
-            var emas = resDatedSeriesLinq
-                .Select(s =>
-                {
-                    var name = s.Name;
-                    Dictionary<DateTime, double> s2 = s.Content.Where(o => o.Value.Close != null)
-                        .Select(o => new { key = o.Key, value = o.Value.Close })
-                        .ToDictionary(o => o.key, o => o.value!.Value);
-
-                    var s18 = EmaInvestiopedia(new DatedSeries<double>(s2), 18);
-                    var s50 = EmaInvestiopedia(new DatedSeries<double>(s2), 50);
-                    var s100 = EmaInvestiopedia(new DatedSeries<double>(s2), 100);
-                    var s200 = EmaInvestiopedia(new DatedSeries<double>(s2), 200);
-
-                    var ema18 = new Ema(18, s18);
-                    var ema50 = new Ema(50, s50);
-                    var ema100 = new Ema(100, s100);
-                    var ema200 = new Ema(200, s200);
-
-                    return new {
-                        Name = name,
-                        Series = new {ema18, ema50, ema100, ema200}
-                    };
-                });
-            */
-
-            //Add possible support series for stochastic rsi
-
-            // Convert to csv and save to blob storage
-            //var s = JsonSerializer.Serialize(emas);
-
-            //var sw = new StringWriter(new StringBuilder());
-            //CsvSerializer.Serialize(sw, emas.First());
-
-            // Calculate ema 18 50 100 200 for every edo series and store in raw ema as
-            // companyId_ema_18, companyId_ema_50, companyId_ema_100, companyId_ema_200
-
-            //var emaFan = CalculateEmaFan(quotes);
-
-            #endregion reference
         }
 
         private Dictionary<DateTime, QuoteDtoYahoo> ParseQuoteString(string quotes)

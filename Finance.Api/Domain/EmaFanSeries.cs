@@ -1,10 +1,12 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Finance.Api.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Finance.Api.Domain
 {
     public class EmaFanSeries : IDictionary<DateTime, EmaFanEntry>
     {
         private IDictionary<DateTime, EmaFanEntry> Series { get; }
+
         public EmaFanSeries(IDictionary<DateTime, EmaFanEntry> series)
         {
             Series = series ?? throw new ArgumentNullException(nameof(series));
@@ -19,7 +21,6 @@ namespace Finance.Api.Domain
         public int Count => Series.Count;
 
         public bool IsReadOnly => Series.IsReadOnly;
-
 
         public void Add(DateTime key, EmaFanEntry value)
         {

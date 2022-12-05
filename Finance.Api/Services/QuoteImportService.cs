@@ -45,22 +45,5 @@ namespace Finance.Api.Services
     }
 
     public readonly record struct DownloadData(string Name, Response<BlobDownloadResult> Content);
-    public readonly record struct CompanyContents<T>(CompanyEntity Company, T Content);
-    public readonly record struct Ema(int Window, DatedSeries<double> Series);
-
-    public readonly record struct EmaFan(CompanyEntity Company, IEnumerable<Ema> Fan);
-
-    public class EmaFanEntity
-    {
-        public EmaFanEntity(Guid id, Guid companyId, ICollection<Ema> fan)
-        {
-            Id = id;
-            CompanyId = companyId;
-            Fan = fan;
-        }
-
-        public Guid Id { get; set; }
-        public Guid CompanyId { get; set; }
-        public ICollection<Ema> Fan { get; set; }
-    }
+    public readonly record struct CompanyContents<T>(CompanyEntity Company, T Content, T AdjustedContent);
 }
