@@ -133,5 +133,19 @@ namespace Finance.Integration.Tests
 
             var t = 0;
         }
+
+        [Fact]
+        public async Task Test__Load_Eod__Calculate_PriceActions()
+        {
+            // Fetch companies from Azure Table
+            IAzureTableService tableService = new AzureTableService();
+            IQuoteImportService service = new QuoteImportService();
+            var companies = (await tableService.GetCompaniesAsync()).ToList();
+
+            // Fetsh eod from Azure blob
+            IAzureLakeService lakeService = new AzureLakeService();
+
+            // Calculate a series identifying price actions
+        }
     }
 }
