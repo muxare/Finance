@@ -50,7 +50,7 @@ namespace Finance.Integration.Tests
                 if (company != null)
                 {
                     var contentString = Encoding.Default.GetString(qs.Content.Value.Content);
-                    return new CompanyContents<Series<EndOfDay>>(company, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString), null);
+                    return new CompanyContents<Series<EndOfDay>>(company, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString));
                 }
                 return new CompanyContents<Series<EndOfDay>>();
             }).ToList();
@@ -58,13 +58,12 @@ namespace Finance.Integration.Tests
             // Series<DateTime, Close> Handle nulls
             var t = csContents.Select(c => new CompanyContents<Series<DateTime, Close>>(
                 c.Company,
-                new Series<DateTime, Close>(c.Content.SeriesCore.ToDictionary(sc => sc.DateTime, sc => sc.Close)),
                 new Series<DateTime, Close>(c.Content.SeriesCore.Where(o => o.Close.CloseCore != null).ToDictionary(sc => sc.DateTime, sc => sc.Close))));
 
             foreach (var companyContent in t)
             {
                 // Ema Fan
-                Series<DateTime, double> closeSeries = new Series<DateTime, double>(companyContent.AdjustedContent.ToDictionary(q => q.Key, q => q.Value.CloseCore.Value));
+                Series<DateTime, double> closeSeries = new Series<DateTime, double>(companyContent.Content.ToDictionary(q => q.Key, q => q.Value.CloseCore.Value));
                 var ema18Processor = new Ema(18);
                 var ema50Processor = new Ema(50);
                 var ema100Processor = new Ema(100);
@@ -96,7 +95,7 @@ namespace Finance.Integration.Tests
         }
 
         [Fact]
-        public async Task Test__Load_Eod_and_EmaFan__Calculate_trends()
+        public async Task Test__Load_Eod_and_EmaFan__Calculate_trends_by_date()
         {
             // Fetch companies from Azure Table
             IAzureTableService tableService = new AzureTableService();
@@ -105,18 +104,22 @@ namespace Finance.Integration.Tests
 
             // Fetsh emafan from Azure blob
             IAzureLakeService lakeService = new AzureLakeService();
-            var emaFanJsonStrings = await lakeService.GetEmaFanFilesAsync();
-            var emaFans = emaFanJsonStrings.Select(emaFanJsonString =>
+            var emaFanJsonStrings = await lakeService.GetEmaFanFilesAsync(companies);
+            var emaFans = emaFanJsonStrings.Select(companyContent =>
             {
+                var c = new CompanyContents<Series<DateTime, EmaFanEntry>>();
+                var companyId = companyContent.Company.RowKey;
+                var emaFanJsonString = companyContent.Content;
                 Dictionary<DateTime, EmaFanEntry>? d = JsonSerializer.Deserialize<Dictionary<DateTime, EmaFanEntry>>(emaFanJsonString);
                 Series<DateTime, EmaFanEntry> ind2 = new Series<DateTime, EmaFanEntry>(d);
-                return ind2;
+                return new CompanyContents<Series<DateTime, EmaFanEntry>>(companyContent.Company, ind2);
+                //return ind2;
             }).ToList();
 
             // Calculate Series<DateTime, TrendEntry>
-            var trends = emaFans.Select(fan =>
+            IEnumerable<CompanyContents<Series<DateTime, TrendEntry>>> trends = emaFans.Select(fan =>
             {
-                return new Series<DateTime, TrendEntry>(fan.ToDictionary(o => o.Key, o =>
+                return new CompanyContents<Series<DateTime, TrendEntry>>(fan.Company, new Series<DateTime, TrendEntry>(fan.Content.ToDictionary(o => o.Key, o =>
                 {
                     var type = TrendType.Between;
                     if (o.Value.Value18 > o.Value.Value50 && o.Value.Value50 > o.Value.Value100 && o.Value.Value100 > o.Value.Value200)
@@ -128,10 +131,10 @@ namespace Finance.Integration.Tests
                         DateTime = o.Key,
                         TrendType = type
                     };
-                }));
+                })));
             });
-
-            var t = 0;
+            var cs = trends.Where(t => t.Content.Last().Value.TrendType == TrendType.Upp).Select(o => o);
+            var lastTrend = trends.Select(content => content.Content.Last());
         }
     }
 }

@@ -45,5 +45,5 @@ namespace Finance.Api.Services
     }
 
     public readonly record struct DownloadData(string Name, Response<BlobDownloadResult> Content);
-    public readonly record struct CompanyContents<T>(CompanyEntity Company, T Content, T AdjustedContent);
+    public readonly record struct CompanyContents<T>(CompanyEntity Company, T Content);
 }

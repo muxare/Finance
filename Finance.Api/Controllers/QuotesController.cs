@@ -75,7 +75,7 @@ namespace Finance.Api.Controllers
                 if (c != null)
                 {
                     var contentString = Encoding.Default.GetString(qs.Content.Value.Content);
-                    return new CompanyContents<Series<EndOfDay>>(c, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString), null);
+                    return new CompanyContents<Series<EndOfDay>>(c, JsonSerializer.Deserialize<Series<EndOfDay>>(contentString));
                 }
                 return new CompanyContents<Series<EndOfDay>>();
             });

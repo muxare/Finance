@@ -12,6 +12,6 @@ namespace Finance.Api.Services
 
         Task<ICollection<string>> GetEodFilesAsync();
 
-        Task<ICollection<string>> GetEmaFanFilesAsync();
+        Task<ICollection<CompanyContents<string>>> GetEmaFanFilesAsync(IEnumerable<CompanyEntity> companies);
     }
 }
