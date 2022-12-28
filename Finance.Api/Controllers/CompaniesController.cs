@@ -12,7 +12,7 @@ namespace Finance.Api.Controllers
 
         public CompaniesController(IAzureTableService tableService)
         {
-            TableService=tableService;
+            TableService = tableService;
         }
 
         [HttpGet(Name = "GetCompanies")]
