@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Finance.Storage": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:53274;http://localhost:53280"
+    }
+  }
+}
