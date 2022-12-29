@@ -46,7 +46,7 @@ namespace Finance.Integration.Tests
 
             var csContents = quotes.Select(qs =>
             {
-                var company = companies.Where(c => c.StorageFileName() == qs.Name).SingleOrDefault();
+                var company = companies.SingleOrDefault(c => c.StorageFileName() == qs.Name);
                 if (company != null)
                 {
                     var contentString = Encoding.Default.GetString(qs.Content.Value.Content);
@@ -63,7 +63,7 @@ namespace Finance.Integration.Tests
             foreach (var companyContent in t)
             {
                 // Ema Fan
-                Series<DateTime, double> closeSeries = new Series<DateTime, double>(companyContent.Content.ToDictionary(q => q.Key, q => q.Value.CloseCore.Value));
+                var closeSeries = new Series<DateTime, double>(companyContent.Content.ToDictionary(q => q.Key, q => q.Value.CloseCore.Value));
                 var ema18Processor = new Ema(18);
                 var ema50Processor = new Ema(50);
                 var ema100Processor = new Ema(100);
@@ -76,10 +76,10 @@ namespace Finance.Integration.Tests
 
                 //ema18.Zip(ema50).Zip(ema100).Zip(ema200);
                 var emaFanDictionary = ema18.Zip(ema50, (first, second) => (date: first.Key, first.Key.Date == second.Key.Date, ema18: first.Value, ema50: second.Value))
-                    .Zip(ema100, (first, second) => (date: first.date, first.date.Date == second.Key.Date, ema18: first.Item3, ema50: first.Item4, ema100: second.Value))
-                    .Zip(ema200, (first, second) => (date: first.date, first.date.Date == second.Key.Date, ema18: first.Item3, ema50: first.Item4, ema100: first.Item5, ema200: second.Value))
+                    .Zip(ema100, (first, second) => (first.date, first.date.Date == second.Key.Date, first.ema18, first.ema50, ema100: second.Value))
+                    .Zip(ema200, (first, second) => (first.date, first.date.Date == second.Key.Date, first.ema18, first.ema50, first.ema100, ema200: second.Value))
                     .ToDictionary(o => o.date, o => new EmaFanEntry { DateTime = o.date, Value18 = o.ema18, Value50 = o.ema50, Value100 = o.ema100, Value200 = o.ema200 });
-                Series<DateTime, EmaFanEntry> emaFan = new Series<DateTime, EmaFanEntry>(emaFanDictionary);
+                var emaFan = new Series<DateTime, EmaFanEntry>(emaFanDictionary);
 
                 // JSON
                 string emaFanJsonString = JsonSerializer.Serialize(emaFan.SeriesCore);
@@ -90,7 +90,7 @@ namespace Finance.Integration.Tests
 
                 await lakeService.SaveJsonEma(emaFanJsonString, companyContent.Company);
                 Dictionary<DateTime, EmaFanEntry>? d = JsonSerializer.Deserialize<Dictionary<DateTime, EmaFanEntry>>(emaFanJsonString);
-                Series<DateTime, EmaFanEntry> ind2 = new Series<DateTime, EmaFanEntry>(d);
+                var ind2 = new Series<DateTime, EmaFanEntry>(d);
             }
         }
 
@@ -111,7 +111,7 @@ namespace Finance.Integration.Tests
                 var companyId = companyContent.Company.RowKey;
                 var emaFanJsonString = companyContent.Content;
                 Dictionary<DateTime, EmaFanEntry>? d = JsonSerializer.Deserialize<Dictionary<DateTime, EmaFanEntry>>(emaFanJsonString);
-                Series<DateTime, EmaFanEntry> ind2 = new Series<DateTime, EmaFanEntry>(d);
+                var ind2 = new Series<DateTime, EmaFanEntry>(d);
                 return new CompanyContents<Series<DateTime, EmaFanEntry>>(companyContent.Company, ind2);
                 //return ind2;
             }).ToList();

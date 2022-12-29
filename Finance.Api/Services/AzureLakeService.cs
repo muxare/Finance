@@ -83,7 +83,7 @@ namespace Finance.Api.Services
             {
                 string companyGuid = secretProperties.Name.Split('/')[1].Split('.')[0];
                 var r = await DownloadFile(dirClient, secretProperties.Name);
-                result.Add(new CompanyContents<string>(companies.Where(c => c.RowKey == companyGuid).SingleOrDefault(), r));
+                result.Add(new CompanyContents<string>(companies.SingleOrDefault(c => c.RowKey == companyGuid), r));
             }
 
             return result;
@@ -101,12 +101,8 @@ namespace Finance.Api.Services
 
         private static DataLakeServiceClient GetDataLakeServiceClient(string accountName, string accountKey)
         {
-            StorageSharedKeyCredential sharedKeyCredential = new StorageSharedKeyCredential(accountName, accountKey);
-
             string dfsUri = "https://" + accountName + ".dfs.core.windows.net";
-
-            var dataLakeServiceClient = new DataLakeServiceClient(new Uri(dfsUri), sharedKeyCredential);
-            return dataLakeServiceClient;
+            return new DataLakeServiceClient(new Uri(dfsUri), new StorageSharedKeyCredential(accountName, accountKey));
         }
 
         private static Stream GenerateStreamFromString(string s)
