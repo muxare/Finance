@@ -30,11 +30,11 @@ public static class CsvSerializer {
 
     static IEnumerable<string> FormatObject<T>(IEnumerable<MemberInfo> fields, T record) {
         foreach (var field in fields) {
-            if (field is FieldInfo) {
-                var fi = (FieldInfo) field;
+            if (field is FieldInfo fieldInfo) {
+                var fi =  fieldInfo;
                 yield return Convert.ToString(fi.GetValue(record));
-            } else if (field is PropertyInfo) {
-                var pi = (PropertyInfo) field;
+            } else if (field is PropertyInfo propertyInfo) {
+                var pi =  propertyInfo;
                 yield return Convert.ToString(pi.GetValue(record, null));
             } else {
                 throw new Exception("Unhandled case.");
@@ -49,10 +49,10 @@ public static class CsvSerializer {
     }
 
     static string QuoteField(string field) {
-        if (String.IsNullOrEmpty(field)) {
+        if (string.IsNullOrEmpty(field)) {
             return "\"\"";
-        } else if (field.Contains(CsvSeparator) || field.Contains("\"") || field.Contains("\r") || field.Contains("\n")) {
-            return String.Format("\"{0}\"", field.Replace("\"", "\"\""));
+        } else if (field.Contains(CsvSeparator) || field.Contains('"') || field.Contains('\r') || field.Contains('\n')) {
+            return string.Format("\"{0}\"", field.Replace("\"", "\"\""));
         } else {
             return field;
         }
@@ -60,7 +60,7 @@ public static class CsvSerializer {
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class ColumnOrderAttribute : Attribute {
-        public int Order { get; private set; }
+        public int Order { get; }
         public ColumnOrderAttribute(int order) { Order = order; }
     }
 }
