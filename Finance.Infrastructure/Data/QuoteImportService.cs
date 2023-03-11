@@ -1,11 +1,9 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Finance.Api.Controllers;
-using Finance.Api.Domain;
-using Finance.Api.Domain.ValueObjects;
 using Finance.Api.Extentions;
-using Finance.Api.Models;
+using Finance.Application.Contracts.Infrastructure;
+using Finance.Application.Models;
 using System.Runtime.Intrinsics.X86;
 
 namespace Finance.Api.Services
@@ -43,7 +41,4 @@ namespace Finance.Api.Services
             return r;
         }
     }
-
-    public readonly record struct DownloadData(string Name, Response<BlobDownloadResult> Content);
-    public readonly record struct CompanyContents<T>(CompanyEntity Company, T Content);
 }

@@ -1,13 +1,12 @@
 ﻿using Azure;
 using Azure.Storage;
 using Azure.Storage.Files.DataLake;
-using Azure.Storage.Files.DataLake.Models;
-using Finance.Api.Models;
-using System.Text;
+using Finance.Application.Contracts.Infrastructure;
+using Finance.Application.Models;
 
-namespace Finance.Api.Services
+namespace Finance.Infrastructure.AzureLake
 {
-    public class AzureLakeService : IAzureLakeService
+    public class AzureLakeService : IAzureLakeService<CompanyEntity>
     {
         private const string AccountName = "financequotestorage";
         private const string AccountKey = "zF9IfHEw6C1FVGcoC07HngYDvvgsBuHc+Ww1U2fqTIdAIZUyqUIJs3ef4ZR8+Z5/kzHi95igdy1Pm+uuIOp12w==";

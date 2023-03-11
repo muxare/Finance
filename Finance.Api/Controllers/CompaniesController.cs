@@ -1,5 +1,5 @@
-﻿using Finance.Api.Models;
-using Finance.Api.Services;
+﻿using Finance.Api.Services;
+using Finance.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finance.Api.Controllers

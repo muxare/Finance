@@ -1,7 +1,9 @@
-using Finance.Api.Domain;
 using Finance.Api.Domain.ValueObjects;
-using Finance.Api.Models;
 using Finance.Api.Services;
+using Finance.Application.Contracts.Infrastructure;
+using Finance.Application.Models;
+using Finance.Domain.Entities;
+using Finance.Infrastructure.AzureLake;
 using System.Text;
 using System.Text.Json;
 
@@ -9,11 +11,16 @@ namespace Finance.Integration.Tests
 {
     public class EndToEndTests
     {
+        /// <summary>
+        /// Infrastructure tests
+        /// Importing and storing all data on companies in storage
+        /// </summary>
+        /// <returns></returns>
         [Fact]
         public async Task Test__ImportFromExternalSourceAsync()
         {
             IAzureTableService tableService = new AzureTableService();
-            IAzureLakeService lakeService = new AzureLakeService();
+            IAzureLakeService<CompanyEntity> lakeService = new AzureLakeService();
             var cs = (await tableService.GetCompaniesAsync()).ToList();
 
             IQuoteImportService service = new QuoteImportService();
@@ -85,7 +92,7 @@ namespace Finance.Integration.Tests
                 string emaFanJsonString = JsonSerializer.Serialize(emaFan.SeriesCore);
 
                 // Azure Storage
-                IAzureLakeService lakeService = new AzureLakeService();
+                IAzureLakeService<CompanyEntity> lakeService = new AzureLakeService();
                 //var company = (await tableService.GetCompaniesAsync()).ToList().Where(c => c.Ticker == "TSLA").SingleOrDefault();
 
                 await lakeService.SaveJsonEma(emaFanJsonString, companyContent.Company);
@@ -103,11 +110,11 @@ namespace Finance.Integration.Tests
             var companies = (await tableService.GetCompaniesAsync()).ToList();
 
             // Fetsh emafan from Azure blob
-            IAzureLakeService lakeService = new AzureLakeService();
+            IAzureLakeService<CompanyEntity> lakeService = new AzureLakeService();
             var emaFanJsonStrings = await lakeService.GetEmaFanFilesAsync(companies);
             var emaFans = emaFanJsonStrings.Select(companyContent =>
             {
-                var c = new CompanyContents<Series<DateTime, EmaFanEntry>>();
+                //var c = new CompanyContents<Series<DateTime, EmaFanEntry>>();
                 var companyId = companyContent.Company.RowKey;
                 var emaFanJsonString = companyContent.Content;
                 Dictionary<DateTime, EmaFanEntry>? d = JsonSerializer.Deserialize<Dictionary<DateTime, EmaFanEntry>>(emaFanJsonString);

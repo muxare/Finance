@@ -1,3 +1,5 @@
+using Finance.Domain.Entities;
+
 namespace Finance.Api.Domain.Tests
 {
     public class DatedSeriesTests

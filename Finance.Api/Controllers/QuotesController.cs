@@ -1,9 +1,10 @@
 ﻿using Azure.Storage.Blobs;
 using Csv;
-using Finance.Api.Domain;
 using Finance.Api.Domain.ValueObjects;
-using Finance.Api.Models;
 using Finance.Api.Services;
+using Finance.Application.Contracts.Infrastructure;
+using Finance.Application.Models;
+using Finance.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text;
@@ -20,9 +21,9 @@ namespace Finance.Api.Controllers
     {
         private IAzureTableService TableService { get; }
         private IQuoteImportService ImportService { get; }
-        private IAzureLakeService LakeService { get; }
+        private IAzureLakeService<CompanyEntity> LakeService { get; }
 
-        public QuotesController(IAzureTableService tableService, IQuoteImportService importService, IAzureLakeService lakeService)
+        public QuotesController(IAzureTableService tableService, IQuoteImportService importService, IAzureLakeService<CompanyEntity> lakeService)
         {
             TableService = tableService ?? throw new ArgumentNullException(nameof(tableService));
             ImportService = importService ?? throw new ArgumentNullException(nameof(importService));
@@ -79,8 +80,6 @@ namespace Finance.Api.Controllers
                 }
                 return new CompanyContents<Series<EndOfDay>>();
             });
-
-            var mu = 0;
         }
 
         private Dictionary<DateTime, QuoteDtoYahoo> ParseQuoteString(string quotes)

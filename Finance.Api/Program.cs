@@ -1,4 +1,7 @@
 using Finance.Api.Services;
+using Finance.Application.Contracts.Infrastructure;
+using Finance.Application.Models;
+using Finance.Infrastructure.AzureLake;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -13,7 +16,7 @@ builder.Services.AddCors(options =>
                       });
 });
 // Add services to the container.
-builder.Services.AddTransient<IAzureLakeService, AzureLakeService>();
+builder.Services.AddTransient<IAzureLakeService<CompanyEntity>, AzureLakeService>();
 builder.Services.AddTransient<IAzureTableService, AzureTableService>();
 builder.Services.AddTransient<IQuoteImportService, QuoteImportService>();
 

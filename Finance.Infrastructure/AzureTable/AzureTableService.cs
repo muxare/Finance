@@ -1,6 +1,6 @@
 ﻿using Azure;
 using Azure.Data.Tables;
-using Finance.Api.Models;
+using Finance.Application.Models;
 
 namespace Finance.Api.Services
 {

@@ -5,15 +5,15 @@ namespace Finance.Api;
 
 public static class CsvSerializer {
     /// <summary>
-    /// Serialize objects to Comma Separated Value (CSV) format [1].
-    ///
+    /// <para>Serialize objects to Comma Separated Value (CSV) format [1].</para>
+    /// <para>
     /// Rather than try to serialize arbitrarily complex types with this
     /// function, it is better, given type A, to specify a new type, A'.
     /// Have the constructor of A' accept an object of type A, then assign
     /// the relevant values to appropriately named fields or properties on
     /// the A' object.
-    ///
-    /// [1] http://tools.ietf.org/html/rfc4180
+    /// </para>
+    /// <para>[1] http://tools.ietf.org/html/rfc4180</para>
     /// </summary>
     public static void Serialize<T>(TextWriter output, IEnumerable<T> objects) {
         var fields =

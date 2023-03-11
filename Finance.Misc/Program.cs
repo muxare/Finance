@@ -2,7 +2,8 @@
 using Dto;
 using Finance.Api.Domain;
 using Finance.Api.Domain.ValueObjects;
-using Finance.Api.Models;
+using Finance.Application.Models;
+using Finance.Domain.Entities;
 using System.Globalization;
 
 Console.WriteLine("Hello, World!");
@@ -54,7 +55,7 @@ EmaFanSeries list = closeSeries.Select(q => new EmaFanEntry
     Value200 = ema200[q.Key]
 }).ToEmaFanSeries();
 
-State state = new State();
+//State state = new State();
 //state = Reducers.Reducer(state, null);
 
 var resUpTrend = BackTestUpTrend(seriesAsc.ToDictionary(o => o.Key, o => o), ema18, ema50, ema100, ema200);
