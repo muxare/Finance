@@ -1,4 +1,4 @@
-﻿namespace Finance.Api.Domain
+﻿namespace Finance.Domain.Common
 {
     public abstract class ValueObject
     {

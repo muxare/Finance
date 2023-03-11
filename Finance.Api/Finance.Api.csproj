@@ -20,6 +20,7 @@
     <Compile Remove="Services\IAzureLakeService.cs" />
     <Compile Remove="Services\IAzureTableService.cs" />
     <Compile Remove="Services\IQuoteImportService.cs" />
+    <Compile Remove="WeatherForecast.cs" />
   </ItemGroup>
 
   <ItemGroup>

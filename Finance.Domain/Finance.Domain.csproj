@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
+    <Compile Remove="Entities\bounceState.cs" />
+    <Compile Remove="Entities\BounceState1.cs" />
   </ItemGroup>
 
 </Project>

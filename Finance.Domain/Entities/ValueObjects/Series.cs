@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+using Finance.Domain.Common;
 
 namespace Finance.Api.Domain.ValueObjects
 {

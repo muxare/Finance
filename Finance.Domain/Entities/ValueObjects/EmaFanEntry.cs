@@ -1,4 +1,6 @@
-﻿namespace Finance.Api.Domain.ValueObjects
+﻿using Finance.Domain.Common;
+
+namespace Finance.Api.Domain.ValueObjects
 {
     public class EmaFanEntry : ValueObject
     {

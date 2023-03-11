@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Finance.Domain.Common;
 
 namespace Finance.Api.Domain.ValueObjects
 {
