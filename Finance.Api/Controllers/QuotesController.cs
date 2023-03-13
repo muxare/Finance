@@ -1,17 +1,15 @@
 ﻿using Azure.Storage.Blobs;
 using Csv;
-using Finance.Api.Domain.ValueObjects;
 using Finance.Api.Services;
 using Finance.Application.Contracts.Infrastructure;
 using Finance.Application.Models;
 using Finance.Domain.Entities;
+using Finance.Domain.Entities.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using BlobServiceClient = Azure.Storage.Blobs.BlobServiceClient;
-
-using ValueObjects = Finance.Api.Domain.ValueObjects;
 
 namespace Finance.Api.Controllers
 {
@@ -42,9 +40,9 @@ namespace Finance.Api.Controllers
             {
                 var quotes = await ImportService.GetQuotesAsync(company, DateTime.MinValue, DateTime.UtcNow);
 
-                ValueObjects.Series<ValueObjects.EndOfDay> series =
-                    new ValueObjects.Series<ValueObjects.EndOfDay>(
-                        quotes.Split('\n').Skip(1).Select(o => (ValueObjects.EndOfDay)o)
+                Series<EndOfDay> series =
+                    new Series<EndOfDay>(
+                        quotes.Split('\n').Skip(1).Select(o => (EndOfDay)o)
                         );
 
                 await LakeService.SaveQuotes(quotes, company);

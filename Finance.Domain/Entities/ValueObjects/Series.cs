@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Finance.Domain.Common;
 
-namespace Finance.Api.Domain.ValueObjects
+namespace Finance.Domain.Entities.ValueObjects
 {
     public class Series<T> : ValueObject
     {
@@ -31,7 +31,7 @@ namespace Finance.Api.Domain.ValueObjects
         [JsonConstructor]
         public Series(IDictionary<TKey, TValue> seriesCore)
         {
-            this.SeriesCore = seriesCore ?? new Dictionary<TKey, TValue>();
+            SeriesCore = seriesCore ?? new Dictionary<TKey, TValue>();
         }
 
         public ICollection<TKey> Keys => SeriesCore.Keys;

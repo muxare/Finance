@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Finance.Api.Services;
-using Finance.Api.Domain.ValueObjects;
 using System.Text.Json;
 using Finance.Infrastructure.AzureLake;
 using Finance.Application.Contracts.Infrastructure;
 using Finance.Application.Models;
+using Finance.Domain.Entities.ValueObjects;
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services => services.AddTransient<FetchYahooFinanceDataService>())

@@ -1,4 +1,4 @@
-﻿using Finance.Api.Domain.ValueObjects;
+﻿using Finance.Domain.Entities.ValueObjects;
 
 namespace Finance.Domain.Entities
 {

@@ -1,7 +1,8 @@
 ﻿using System.Text.Json.Serialization;
+using Finance.Api.Domain.ValueObjects;
 using Finance.Domain.Common;
 
-namespace Finance.Api.Domain.ValueObjects
+namespace Finance.Domain.Entities.ValueObjects
 {
     public class EndOfDay : ValueObject
     {

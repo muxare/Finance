@@ -3,6 +3,7 @@ using Finance.Api.Services;
 using Finance.Application.Contracts.Infrastructure;
 using Finance.Application.Models;
 using Finance.Domain.Entities;
+using Finance.Domain.Entities.ValueObjects;
 using Finance.Infrastructure.AzureLake;
 using System.Text;
 using System.Text.Json;
